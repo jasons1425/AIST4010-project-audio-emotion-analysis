@@ -9,21 +9,22 @@ import torch
 # data preparation
 BATCH = 32
 data, ids = load_imgs()
-train_data, valid_data = data[:8000], data[8000:]
-train_ids, valid_ids = ids[:8000], ids[8000:]
+train_data, valid_data = data[:9000], data[9000:]
+train_ids, valid_ids = ids[:9000], ids[9000:]
 train_labels, valid_labels = get_labels(train_ids), get_labels(valid_ids)
-train_loader = get_loader(train_data, train_labels, batch_size=BATCH)
-valid_loader = get_loader(valid_data, valid_labels, batch_size=BATCH)
+train_loader = get_loader(train_data, train_labels[:, 0].reshape(-1, 1), batch_size=BATCH)
+valid_loader = get_loader(valid_data, valid_labels[:, 0].reshape(-1, 1), batch_size=BATCH)
 
 
 # model preparation
+FC = [128, 128, 64]
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model = VGGSpecModel(vgg16, 4096).half().to(device)
+model = VGGSpecModel(vgg16, 4096, 1, fcs=FC).half().to(device)
 
 
 # training params
 LR, MOMENTUM, DECAY = 0.0001, 0.9, 0.01
-criterion = nn.MSELoss()
+criterion = nn.L1Loss()
 optimizer = torch.optim.SGD(model.parameters(),
                             lr=LR, momentum=MOMENTUM, weight_decay=DECAY)
 
@@ -32,4 +33,4 @@ optimizer = torch.optim.SGD(model.parameters(),
 EPOCHS = 10
 best_model, losses = train_model(model, train_loader, criterion, optimizer, EPOCHS,
                                  device, valid_loader=valid_loader, half=True)
-torch.save(model.state_dict(), f"spec_approach.pth")
+torch.save(model.state_dict(), f"spec_valence.pth")

@@ -13,11 +13,21 @@ class VGGClassifier(nn.Module):
 
 
 class VGGSpecModel(nn.Module):
-    def __init__(self, vgg_pretrained, embedding_dim):
+    def __init__(self, vgg_pretrained, embedding_dim, out_dim, fcs=[], dropout=0.2, act=nn.ReLU):
         super(VGGSpecModel, self).__init__()
         vgg = VGGClassifier(vgg_pretrained)
         self.vgg = vgg
-        self.classifier = nn.Linear(embedding_dim, 3)
+        fc_layers = []
+        for idx in range(1, len(fcs)):
+            fc_layers.append(nn.Linear(fcs[idx-1], fcs[idx]))
+            fc_layers.append(act())
+            fc_layers.append(nn.Dropout(dropout))
+        if fcs:
+            fc_layers.insert(0, nn.Linear(embedding_dim, fcs[0]))
+            fc_layers.append(nn.Linear(fcs[-1], out_dim))
+        else:
+            fc_layers.append(nn.Linear(embedding_dim, out_dim))
+        self.classifier = nn.Sequential(*fc_layers)
 
     def forward(self, x):
         vgg_output = self.vgg(x)

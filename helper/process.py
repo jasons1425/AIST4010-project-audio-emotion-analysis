@@ -23,7 +23,7 @@ def train_model(model, train_loader, criterion, optimizer, epochs,
                 model.train()
             else:
                 model.eval()
-            running_loss, running_acc = 0.0, 0.0
+            running_loss = 0.0
             print(f"{phase}", end=" - ")
 
             with torch.set_grad_enabled(phase == "train"):
@@ -34,7 +34,7 @@ def train_model(model, train_loader, criterion, optimizer, epochs,
                     inputs, labels = inputs.to(device), labels.to(device)
                     outputs = model(inputs)
                     loss = criterion(outputs, labels)
-                    running_loss += loss
+                    running_loss += loss.item() * len(inputs)
 
                     if phase == "train":
                         loss.backward()
