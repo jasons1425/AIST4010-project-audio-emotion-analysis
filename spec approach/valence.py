@@ -12,8 +12,8 @@ data, ids = load_imgs()
 train_data, valid_data = data[:9000], data[9000:]
 train_ids, valid_ids = ids[:9000], ids[9000:]
 train_labels, valid_labels = get_labels(train_ids), get_labels(valid_ids)
-train_loader = get_loader(train_data, train_labels[:, 0].reshape(-1, 1), batch_size=BATCH)
-valid_loader = get_loader(valid_data, valid_labels[:, 0].reshape(-1, 1), batch_size=BATCH)
+train_loader = get_loader(train_data, train_labels[:, 0].reshape(-1, 1)/9, batch_size=BATCH)
+valid_loader = get_loader(valid_data, valid_labels[:, 0].reshape(-1, 1)/9, batch_size=BATCH)
 
 
 # model preparation
