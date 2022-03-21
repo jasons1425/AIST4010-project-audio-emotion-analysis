@@ -17,13 +17,13 @@ valid_loader = get_loader(valid_data, valid_labels[:, 2].reshape(-1, 1)/9, batch
 
 
 # model preparation
-FC = [512, 512, 128]
+FC = [256, 64]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model = VGGSpecModel(vgg16, 4096, 1, fcs=FC).half().to(device)
 
 
 # training params
-LR, MOMENTUM, DECAY = 0.0001, 0.9, 0.01
+LR, MOMENTUM, DECAY = 0.001, 0.9, 0.01
 criterion = nn.L1Loss()
 optimizer = torch.optim.SGD(model.parameters(),
                             lr=LR, momentum=MOMENTUM, weight_decay=DECAY)

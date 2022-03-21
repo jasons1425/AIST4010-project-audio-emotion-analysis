@@ -19,16 +19,16 @@ valid_loader = get_loader(valid_data, valid_labels/9, batch_size=BATCH, shuffle=
 # model preparation
 print("setting up model...")
 device = "cuda" if torch.cuda.is_available() else "cpu"
-val_model = VGGSpecModel(vgg16, 4096, 1, fcs=[128, 128, 64]).half().to(device)
-val_model.load_state_dict(torch.load(r"../trials/spec_valence1427.pth"))
+val_model = VGGSpecModel(vgg16, 4096, 1, fcs=[256, 64]).half().to(device)
+val_model.load_state_dict(torch.load(r"../trials/spec_valence1346.pth"))
 val_model.eval()
 
-aro_model = VGGSpecModel(vgg16, 4096, 1, fcs=[128, 128, 64]).half().to(device)
-aro_model.load_state_dict(torch.load(r"../trials/spec_arousal0960.pth"))
+aro_model = VGGSpecModel(vgg16, 4096, 1, fcs=[256, 64]).half().to(device)
+aro_model.load_state_dict(torch.load(r"../trials/spec_arousal0941.pth"))
 aro_model.eval()
 
-dom_model = VGGSpecModel(vgg16, 4096, 1, fcs=[128, 128, 64]).half().to(device)
-dom_model.load_state_dict(torch.load(r"../trials/spec_dominance1024.pth"))
+dom_model = VGGSpecModel(vgg16, 4096, 1, fcs=[256, 64]).half().to(device)
+dom_model.load_state_dict(torch.load(r"../trials/spec_dominance0957.pth"))
 dom_model.eval()
 
 
