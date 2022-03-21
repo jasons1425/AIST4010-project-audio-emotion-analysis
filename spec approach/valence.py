@@ -17,7 +17,7 @@ valid_loader = get_loader(valid_data, valid_labels[:, 0].reshape(-1, 1)/9, batch
 
 
 # model preparation
-FC = []
+FC = [512, 512, 128]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model = VGGSpecModel(vgg16, 4096, 1, fcs=FC).half().to(device)
 
