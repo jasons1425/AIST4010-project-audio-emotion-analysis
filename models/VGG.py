@@ -2,10 +2,10 @@ import torch.nn as nn
 
 
 class VGGClassifier(nn.Module):
-    def __init__(self, vgg_pretrained):
+    def __init__(self, vgg_pretrained, classifier_base):
         super(VGGClassifier, self).__init__()
         vgg = vgg_pretrained(pretrained=True)
-        vgg.classifier = vgg.classifier[:-1]
+        vgg.classifier = vgg.classifier[:classifier_base]
         self.vgg = vgg
 
     def forward(self, x):
@@ -13,9 +13,10 @@ class VGGClassifier(nn.Module):
 
 
 class VGGSpecModel(nn.Module):
-    def __init__(self, vgg_pretrained, embedding_dim, out_dim, fcs=[], dropout=0.2, act=nn.ReLU):
+    def __init__(self, vgg_pretrained, embedding_dim, out_dim,
+                 fcs=[], dropout=0.2, act=nn.ReLU, classifier_base=-1):
         super(VGGSpecModel, self).__init__()
-        vgg = VGGClassifier(vgg_pretrained)
+        vgg = VGGClassifier(vgg_pretrained, classifier_base)
         self.vgg = vgg
         fc_layers = []
         for idx in range(1, len(fcs)):
