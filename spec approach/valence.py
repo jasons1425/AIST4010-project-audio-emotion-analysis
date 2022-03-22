@@ -17,9 +17,10 @@ valid_loader = get_loader(valid_data, valid_labels[:, 0].reshape(-1, 1)/9, batch
 
 
 # model preparation
-FC = [256, 64]
+FC = [128, 128, 64]
+DROPOUT = 0.2
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model = VGGSpecModel(vgg16, 4096, 1, fcs=FC).half().to(device)
+model = VGGSpecModel(vgg11, 4096, 1, fcs=FC, dropout=DROPOUT).half().to(device)
 
 
 # training params
@@ -30,7 +31,7 @@ optimizer = torch.optim.SGD(model.parameters(),
 
 
 # training
-EPOCHS = 10
+EPOCHS = 50
 best_model, losses = train_model(model, train_loader, criterion, optimizer, EPOCHS,
                                  device, valid_loader=valid_loader, half=True)
 torch.save(model.state_dict(), f"spec_valence.pth")
