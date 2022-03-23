@@ -1,13 +1,13 @@
 from data.load import load_imgs, get_loader, get_labels
 from helper.process import train_model
 from models.VGG import VGGSpecModel
-from torchvision.models import vgg16, vgg11, vgg19, vgg13
+from torchvision.models import vgg16, vgg11, vgg19, vgg13, vgg11_bn
 import torch.nn as nn
 import torch
 
 
 # data preparation
-BATCH = 32
+BATCH = 64
 data, ids = load_imgs()
 train_data, valid_data = data[:8000], data[8000:9000]
 train_ids, valid_ids = ids[:8000], ids[8000:9000]
@@ -17,15 +17,15 @@ valid_loader = get_loader(valid_data, valid_labels[:, 0].reshape(-1, 1)/9, batch
 
 
 # model preparation
-FC = [128, 64]
-DROPOUT, CLS_BASE = 0.5, 0
+FC = [256, 64]
+DROPOUT, CLS_BASE = 0.5, -1
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model = VGGSpecModel(vgg11, 25088, 1, fcs=FC, dropout=DROPOUT,
+model = VGGSpecModel(vgg11, 4096, 1, fcs=FC, dropout=DROPOUT,
                      classifier_base=CLS_BASE).half().to(device)
 
 
 # training params
-LR, MOMENTUM, DECAY = 0.001, 0.9, 0.01
+LR, MOMENTUM, DECAY = 0.01, 0.9, 0.01
 criterion = nn.L1Loss()
 optimizer = torch.optim.SGD(model.parameters(),
                             lr=LR, momentum=MOMENTUM, weight_decay=DECAY)
