@@ -78,6 +78,17 @@ class PlainCNN(nn.Module):
             nn.MaxPool2d(2),            # 64 * 15 * 15
             nn.Flatten()                # 14400
         ]
+        # config D
+        # ref: Classification of Affective Emotion in Musical Themes
+        config = [
+            nn.BatchNorm2d(3),              # 3 * 224 * 224
+            nn.Conv2d(3, 16, 3, 1, 1),      # 16 * 224 * 224
+            nn.MaxPool2d((1, 2)),           # 16 * 224 * 112
+            nn.BatchNorm2d(16),             # 16 * 224 * 112
+            nn.Conv2d(16, 32, 3, 1, 1),     # 32 * 224 * 112
+            nn.MaxPool2d(2),                # 32 * 112 * 64
+            nn.Flatten(),                   # 229376
+        ]
         self.conv_stack = nn.Sequential(*config)
         fc_layers = []
         for idx in range(1, len(fcs)):
