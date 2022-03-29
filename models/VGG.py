@@ -36,12 +36,12 @@ class VGGSpecModel(nn.Module):
 
 
 class PlainCNN(nn.Module):
-    def __init__(self, embedding_dim, out_dim,
-                 fcs=[], dropout=0.2, act=nn.ReLU):
+    def __init__(self, embedding_dim, out_dim, in_dim=3,
+                 fcs=[], dropout=0.2, act=nn.ReLU, classifier_func=None):
         super().__init__()
         # config A
         config = [
-            nn.Conv2d(3, 32, 3, 1, 1),  # 32 * 224 * 224
+            nn.Conv2d(in_dim, 32, 3, 1, 1),  # 32 * 224 * 224
             act(),
             nn.MaxPool2d(2),  # 32 * 112 * 112
             nn.Conv2d(32, 64, 3, 1, 1),  # 64 * 112 * 112
@@ -54,7 +54,7 @@ class PlainCNN(nn.Module):
         ]
         # config B
         config = [
-            nn.Conv2d(3, 32, 7),        # 32 * 218 * 218
+            nn.Conv2d(in_dim, 32, 7),        # 32 * 218 * 218
             act(),
             nn.MaxPool2d(2),            # 32 * 109 * 109
             nn.Conv2d(32, 64, 5),       # 64 * 105 * 105
@@ -67,7 +67,7 @@ class PlainCNN(nn.Module):
         ]
         # config C
         config = [
-            nn.Conv2d(3, 32, 7),        # 32 * 218 * 218
+            nn.Conv2d(in_dim, 32, 7),        # 32 * 218 * 218
             act(),
             nn.MaxPool2d(3),            # 32 * 72 * 72
             nn.Conv2d(32, 64, 5),       # 64 * 68 * 68
@@ -81,13 +81,48 @@ class PlainCNN(nn.Module):
         # config D
         # ref: Classification of Affective Emotion in Musical Themes
         config = [
-            nn.BatchNorm2d(3),              # 3 * 224 * 224
-            nn.Conv2d(3, 16, 3, 1, 1),      # 16 * 224 * 224
+            nn.BatchNorm2d(in_dim),              # 3 * 224 * 224
+            nn.Conv2d(in_dim, 16, 3, 1, 1),      # 16 * 224 * 224
             nn.MaxPool2d((1, 2)),           # 16 * 224 * 112
             nn.BatchNorm2d(16),             # 16 * 224 * 112
             nn.Conv2d(16, 32, 3, 1, 1),     # 32 * 224 * 112
             nn.MaxPool2d(2),                # 32 * 112 * 64
             nn.Flatten(),                   # 229376
+        ]
+        # config E
+        config = [
+            nn.Conv2d(in_dim, 16, 7, 3),      # 16 * 75 * 73
+            act(),
+            nn.MaxPool2d(2),                # 16 * 36 * 36
+            nn.Conv2d(16, 32, 3, 1, 1),     # 32 * 36 * 36
+            act(),
+            nn.MaxPool2d(2),                # 32 * 18 * 18
+            nn.Flatten(),                   # 10368
+        ]
+        # config F
+        config = [
+            nn.Conv2d(in_dim, 16, 7, 3),         # 16 * 73 * 73
+            act(),
+            nn.MaxPool2d(2),                # 16 * 36 * 36
+            nn.Conv2d(16, 32, 3, 1, 1),     # 32 * 36 * 36
+            act(),
+            nn.MaxPool2d(2),                # 32 * 18 * 18
+            nn.Conv2d(32, 64, 3, 1, 1),     # 64 * 18 * 18
+            act(),
+            nn.Conv2d(64, 64, 3, 1, 1),     # 64 * 18 * 18
+            act(),
+            nn.MaxPool2d(2),                # 64 * 9 * 9
+            nn.Flatten(),                   # 5184
+        ]
+        # config G
+        config = [
+            nn.Conv2d(in_dim, 16, 7, 3, 0),          # 16 * 73 * 73
+            act(),
+            nn.Conv2d(16, 16, 3, 1, 1),         # 16 * 73 * 73
+            act(),
+            nn.MaxPool2d(2),                    # 16 * 36 * 36
+            nn.Conv2d(16, 4096, 36, 1, 0),      # 4096 * 1 * 1
+            nn.Flatten(),
         ]
         self.conv_stack = nn.Sequential(*config)
         fc_layers = []
@@ -100,6 +135,8 @@ class PlainCNN(nn.Module):
             fc_layers.append(nn.Linear(fcs[-1], out_dim))
         else:
             fc_layers.append(nn.Linear(embedding_dim, out_dim))
+        if classifier_func:
+            fc_layers.append(classifier_func())
         self.classifier = nn.Sequential(*fc_layers)
 
     def forward(self, x):
@@ -112,7 +149,6 @@ class PlainCNN(nn.Module):
 class AcousticSceneCNN(nn.Module):
     def __init__(self):
         super().__init__()
-        # config D
         # ref: https://arxiv.org/abs/1809.01543
         config = [
             nn.Conv2d(3, 32, 5, 2, 2),      # 32 * 112 * 112
