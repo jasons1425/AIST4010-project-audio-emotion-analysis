@@ -1,5 +1,5 @@
 from data.load import load_imgs, load_imgs_png, get_loader, get_labels
-from data.preprocess import spectrum_transform_crop, spectrum_transform
+from data.preprocess import spectrum_transform
 from helper.process import train_model
 from models.VGG import VGGSpecModel, PlainCNN, AcousticSceneCNN
 from models.VGGish import VGGishSpecModel
@@ -25,7 +25,7 @@ train_labels = mm_scaler.fit_transform(train_labels)
 valid_labels = mm_scaler.transform(valid_labels)
 # if resize is None, the image dimension will be 217 * 334 (H * W)
 train_loader = get_loader(train_data, train_labels, batch_size=BATCH,
-                          transform=spectrum_transform(resize=None), shuffle=True)
+                          transform=spectrum_transform(resize=None, norm=None), shuffle=True)
 valid_loader = get_loader(valid_data, valid_labels, batch_size=BATCH,
                           transform=spectrum_transform(resize=None, norm=None), shuffle=False)
 
@@ -42,11 +42,12 @@ valid_loader = get_loader(valid_data, valid_labels, batch_size=BATCH,
 # device = "cuda" if torch.cuda.is_available() else "cpu"
 # model = VGGishSpecModel(128, 1, fcs=FC, dropout=DROPOUT).half().to(device)
 
-FC = [128, 64]
+FC = [2048, 4096, 1024]
 DROPOUT = 0.5
 CLASSIFIER_FUNC = nn.Sigmoid
+IN_DIM = 1
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model = PlainCNN(10368, 1, fcs=FC, dropout=DROPOUT,
+model = PlainCNN(15360, 1, in_dim=IN_DIM, fcs=FC, dropout=DROPOUT,
                  classifier_func=CLASSIFIER_FUNC).half().to(device)
 
 # device = "cuda" if torch.cuda.is_available() else "cpu"

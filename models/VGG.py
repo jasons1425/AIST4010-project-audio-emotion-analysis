@@ -116,13 +116,33 @@ class PlainCNN(nn.Module):
         ]
         # config G
         config = [
-            nn.Conv2d(in_dim, 16, 7, 3, 0),          # 16 * 73 * 73
+            nn.Conv2d(in_dim, 16, 7, 3, 0),     # 16 * 73 * 73
             act(),
             nn.Conv2d(16, 16, 3, 1, 1),         # 16 * 73 * 73
             act(),
             nn.MaxPool2d(2),                    # 16 * 36 * 36
             nn.Conv2d(16, 4096, 36, 1, 0),      # 4096 * 1 * 1
             nn.Flatten(),
+        ]
+        # config H for input shape (1, 217, 334)
+        config = [
+            nn.Conv2d(in_dim, 32, 5, 2, 2),     # 32 * 109 * 167
+            act(),
+            nn.MaxPool2d(2),                    # 32 * 55 * 84
+            nn.Conv2d(32, 64, 3, 1, 1),         # 64 * 55 * 84
+            act(),
+            nn.MaxPool2d(2),                    # 64 * 27 * 42
+            nn.Conv2d(64, 128, 3, 1, 1),        # 128 * 27 * 42
+            act(),
+            nn.Conv2d(128, 128, 3, 1, 1),       # 128 * 27 * 42
+            act(),
+            nn.MaxPool2d(2),                    # 128 * 13 * 21
+            nn.Conv2d(128, 256, 3, 1, 1),       # 256 * 13 * 21
+            act(),
+            nn.Conv2d(256, 256, 3, 1, 1),       # 256 * 13 * 21
+            act(),
+            nn.MaxPool2d(2),                    # 256 * 6 * 10
+            nn.Flatten(),                       # 15360
         ]
         self.conv_stack = nn.Sequential(*config)
         fc_layers = []
