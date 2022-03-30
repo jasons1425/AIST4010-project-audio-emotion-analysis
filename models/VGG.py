@@ -144,6 +144,16 @@ class PlainCNN(nn.Module):
             nn.MaxPool2d(2),                    # 256 * 6 * 10
             nn.Flatten(),                       # 15360
         ]
+        # config I for input shape (1, 217, 334)
+        config = [
+            nn.Conv2d(in_dim, 32, (5, 31), (2, 3), 0),  # 32 * 107 * 102
+            act(),
+            nn.MaxPool2d(2),                            # 32 * 53 * 51
+            nn.Conv2d(32, 64, 5, 1, 0),                 # 64 * 49 * 47
+            act(),
+            nn.MaxPool2d(2),                            # 64 * 24 * 23
+            nn.Flatten(),                               # 35328
+        ]
         self.conv_stack = nn.Sequential(*config)
         fc_layers = []
         for idx in range(1, len(fcs)):
