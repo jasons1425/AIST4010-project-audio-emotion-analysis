@@ -42,12 +42,12 @@ valid_loader = get_loader(valid_data, valid_labels, batch_size=BATCH,
 # device = "cuda" if torch.cuda.is_available() else "cpu"
 # model = VGGishSpecModel(128, 1, fcs=FC, dropout=DROPOUT).half().to(device)
 
-FC = [128, 64]
+FC = [128, 128]
 DROPOUT = 0.5
-CLASSIFIER_FUNC = nn.Sigmoid
-IN_DIM = 1
+CLASSIFIER_FUNC = None
+IN_DIM = 3
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model = PlainCNN(35328, 1, in_dim=IN_DIM, fcs=FC, dropout=DROPOUT,
+model = PlainCNN(28672, 1, in_dim=IN_DIM, fcs=FC, dropout=DROPOUT,
                  classifier_func=CLASSIFIER_FUNC).half().to(device)
 
 # device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -55,7 +55,7 @@ model = PlainCNN(35328, 1, in_dim=IN_DIM, fcs=FC, dropout=DROPOUT,
 
 
 # training params
-LR, MOMENTUM, DECAY = 1e-2, 0.9, 0.01
+LR, MOMENTUM, DECAY = 1e-3, 0.9, 0.01
 criterion = nn.L1Loss()
 optimizer = torch.optim.SGD(model.parameters(),
                             lr=LR, momentum=MOMENTUM, weight_decay=DECAY)

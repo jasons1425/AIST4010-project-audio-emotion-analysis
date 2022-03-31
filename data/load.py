@@ -39,7 +39,7 @@ def load_imgs_png(fp=PNG_DIR):
     img_ids = [None] * len(fp)
     for idx, img_fp in enumerate(fp):
         img_ids[idx] = re.match(rematch_pattern, img_fp).group(1)
-        imgs[idx] = cv2.imread(img_fp, cv2.COLOR_BGR2RGBA)
+        imgs[idx] = cv2.cvtColor(cv2.imread(img_fp), cv2.COLOR_BGR2RGB)
     return np.array(imgs), np.array(img_ids)
 
 

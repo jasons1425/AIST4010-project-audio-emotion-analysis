@@ -154,6 +154,24 @@ class PlainCNN(nn.Module):
             nn.MaxPool2d(2),                            # 64 * 24 * 23
             nn.Flatten(),                               # 35328
         ]
+        # config J for input shape (3, 217, 334)
+        config = [
+            # consider larger range of frequencies and time
+            # the choice of W = 33 is try to simulate a 3s-window
+            # the choice of width stride = 5 is try to simulate a 0.5s shift
+            nn.Conv2d(in_dim, 64, (77, 33), (1, 5), (0, 0)),     # 64 * 140 * 61
+            act(),
+            nn.MaxPool2d(2),                                # 64 * 70 * 30
+            nn.Conv2d(64, 128, 5, 1, 0),                    # 128 * 66 * 26
+            act(),
+            nn.MaxPool2d(2),                                # 128 * 33 * 13
+            nn.Conv2d(128, 512, 3, 1, 0),                   # 512 * 31 * 11
+            act(),
+            nn.Conv2d(512, 512, 3, 1, 0),                   # 512 * 29 * 9
+            act(),
+            nn.MaxPool2d(2),                                # 512 * 14 * 4
+            nn.Flatten()                                    # 28672
+        ]
         self.conv_stack = nn.Sequential(*config)
         fc_layers = []
         for idx in range(1, len(fcs)):

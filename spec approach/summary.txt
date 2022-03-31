@@ -69,3 +69,5 @@ CNN-configI     32          256-64          1e-3 , 0.9 , 0.01, 10          L1   
 CNN-configI     32          4096-4096-1024  1e-4 , 0.9 , 0.01, 50          L1      0.5      NA          1686-,-, (*, ^0, 1, sigmoid at last, no resize/crop, png)
 CNN-configI     32          128-64          1e-3 , 0.9 , 0.01, 50          L1      0.5      NA          1617-,-, (*, ^0, 1, sigmoid at last, no resize/crop, png)
 CNN-configI     32          128-64          1e-2 , 0.9 , 0.01, 10          L1      0.5      NA          1619-,-, (*, ^0, 1, sigmoid at last, no resize/crop, png)
+CNN-configJ     32          2048-2048       1e-3 , 0.9 , 0.01, 10          L1      0.5      NA          1620-,-, (*, ^0, 1, sigmoid at last, no resize/crop, png)
+CNN-configJ     32          128-128         1e-3 , 0.9 , 0.01, 10          L1      0.5      NA          1617-,-, (*, ^0, 1, no resize/crop, png)
