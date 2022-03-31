@@ -3,6 +3,7 @@ from data.preprocess import spectrum_transform
 from helper.process import train_model
 from models.VGG import VGGSpecModel, PlainCNN, AcousticSceneCNN
 from models.VGGish import VGGishSpecModel
+from models.Inception_ft import InceptionFT
 from torchvision.models import vgg16, vgg11, vgg19, vgg13, vgg11_bn, alexnet
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
@@ -25,9 +26,9 @@ train_labels = mm_scaler.fit_transform(train_labels)
 valid_labels = mm_scaler.transform(valid_labels)
 # if resize is None, the image dimension will be 217 * 334 (H * W)
 train_loader = get_loader(train_data, train_labels, batch_size=BATCH,
-                          transform=spectrum_transform(resize=None, norm=None), shuffle=True)
+                          transform=spectrum_transform(resize=299, norm=True), shuffle=True)
 valid_loader = get_loader(valid_data, valid_labels, batch_size=BATCH,
-                          transform=spectrum_transform(resize=None, norm=None), shuffle=False)
+                          transform=spectrum_transform(resize=299, norm=True), shuffle=False)
 
 
 # model preparation
@@ -42,21 +43,24 @@ valid_loader = get_loader(valid_data, valid_labels, batch_size=BATCH,
 # device = "cuda" if torch.cuda.is_available() else "cpu"
 # model = VGGishSpecModel(128, 1, fcs=FC, dropout=DROPOUT).half().to(device)
 
-FC = [128, 128]
-DROPOUT = 0.5
-CLASSIFIER_FUNC = None
-IN_DIM = 3
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model = PlainCNN(28672, 1, in_dim=IN_DIM, fcs=FC, dropout=DROPOUT,
-                 classifier_func=CLASSIFIER_FUNC).half().to(device)
+# FC = [128, 128]
+# DROPOUT = 0.5
+# CLASSIFIER_FUNC = None
+# IN_DIM = 3
+# device = "cuda" if torch.cuda.is_available() else "cpu"
+# model = PlainCNN(28672, 1, in_dim=IN_DIM, fcs=FC, dropout=DROPOUT,
+#                  classifier_func=CLASSIFIER_FUNC).half().to(device)
 
 # device = "cuda" if torch.cuda.is_available() else "cpu"
 # model = AcousticSceneCNN().half().to(device)
 
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model = InceptionFT().half().to(device)
+
 
 # training params
-LR, MOMENTUM, DECAY = 1e-3, 0.9, 0.01
-criterion = nn.L1Loss()
+LR, MOMENTUM, DECAY = 1e-4, 0.0, 1e-3
+criterion = nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(),
                             lr=LR, momentum=MOMENTUM, weight_decay=DECAY)
 
@@ -67,5 +71,6 @@ best_model, losses = train_model(model, train_loader, criterion, optimizer, EPOC
                                  device, valid_loader=valid_loader, half=True)
 # torch.save(model.state_dict(), f"spec_valence.pth")
 # torch.save(model.state_dict(), f"spec_vggish_valence.pth")
-torch.save(model.state_dict(), f"cnn_spec_valence.pth")
+# torch.save(model.state_dict(), f"cnn_spec_valence.pth")
 # torch.save(model.state_dict(), f"acoucnn_spec_valence.pth")
+torch.save(model.state_dict(), f"inception_spec_valence.pth")

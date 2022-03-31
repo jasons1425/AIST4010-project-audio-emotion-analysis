@@ -71,3 +71,5 @@ CNN-configI     32          128-64          1e-3 , 0.9 , 0.01, 50          L1   
 CNN-configI     32          128-64          1e-2 , 0.9 , 0.01, 10          L1      0.5      NA          1619-,-, (*, ^0, 1, sigmoid at last, no resize/crop, png)
 CNN-configJ     32          2048-2048       1e-3 , 0.9 , 0.01, 10          L1      0.5      NA          1620-,-, (*, ^0, 1, sigmoid at last, no resize/crop, png)
 CNN-configJ     32          128-128         1e-3 , 0.9 , 0.01, 10          L1      0.5      NA          1617-,-, (*, ^0, 1, no resize/crop, png)
+inception       32          NA              1e-4 , 0.0 , 1e-3, 10          L1      NA       NA          1761-,-, (*, ^0, 1, png)
+inception       32          NA              1e-4 , 0.0 , 1e-3, 10          L2      NA       NA          0494-,-, (*, ^0, 1, png)
