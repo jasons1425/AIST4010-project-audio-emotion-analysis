@@ -14,7 +14,8 @@ class VGGClassifier(nn.Module):
 
 class VGGSpecModel(nn.Module):
     def __init__(self, vgg_pretrained, embedding_dim, out_dim,
-                 fcs=[], dropout=0.2, act=nn.ReLU, classifier_base=-1):
+                 fcs=[], dropout=0.2, act=nn.ReLU, classifier_base=-1,
+                 init=nn.init.kaiming_normal_):
         super(VGGSpecModel, self).__init__()
         vgg = VGGClassifier(vgg_pretrained, classifier_base)
         self.vgg = vgg
@@ -28,6 +29,10 @@ class VGGSpecModel(nn.Module):
             fc_layers.append(nn.Linear(fcs[-1], out_dim))
         else:
             fc_layers.append(nn.Linear(embedding_dim, out_dim))
+        if init:
+            for layer in fc_layers:
+                if type(layer) == nn.Linear:
+                    init(layer.weight)
         self.classifier = nn.Sequential(*fc_layers)
 
     def forward(self, x):
