@@ -19,10 +19,12 @@ train_ids, valid_ids = ids[train_idxs], ids[val_idxs]
 train_labels = get_labels(train_ids)[:, 0].reshape(-1, 1) / 9  # map the 9-point scale to 0-1 scale
 valid_labels = get_labels(valid_ids)[:, 0].reshape(-1, 1) / 9  # map the 9-point scale to 0-1 scale
 # if resize is None, the image dimension will be 217 * 334 (H * W)
+train_transform = spectrum_transform(resize=224, norm=True, freq_mask=(0.2, 0.05), time_mask=(0.2, 0.05))
+valid_transform = spectrum_transform(resize=224, norm=True, freq_mask=None, time_mask=None)
 train_loader = get_loader(train_data, train_labels, batch_size=BATCH,
-                          transform=spectrum_transform(resize=224, norm=True), shuffle=True)
+                          transform=train_transform, shuffle=True)
 valid_loader = get_loader(valid_data, valid_labels, batch_size=BATCH,
-                          transform=spectrum_transform(resize=224, norm=True), shuffle=False)
+                          transform=valid_transform, shuffle=False)
 
 
 # model preparation
@@ -31,7 +33,11 @@ valid_loader = get_loader(valid_data, valid_labels, batch_size=BATCH,
 # 4096, 4096 - result: 0.0376
 # 2048, 256  - result: 0.0356
 # 256, 64    - result: 0.0501
-FC = [256, 64]
+# 2048       - result: 0.0317
+# 2048       - result: 0.0330 (augmentation and crop)
+# 2048       - result: 0.0329 (augmentation but no crop)
+# 2048       - result: 0.0349 (augmentation with 0.2, 0.05, no crop)
+FC = [2048]
 DROPOUT, CLS_BASE = 0.5, -1
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model = VGGSpecModel(vgg16, 4096, 1, fcs=FC, dropout=DROPOUT,
