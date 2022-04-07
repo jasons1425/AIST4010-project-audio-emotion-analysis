@@ -8,10 +8,10 @@ class DenseNetClassifier(nn.Module):
         super(DenseNetClassifier, self).__init__()
         densenet = densenet_pretrained(pretrained=True)
         modules = list(densenet.children())[:-1]
-        self.densenet = nn.Sequential(*modules)
+        self.resnet = nn.Sequential(*modules)
 
     def forward(self, x):
-        out = self.densenet(x)
+        out = self.resnet(x)
         out = F.relu(out, inplace=True)
         out = F.adaptive_avg_pool2d(out, (1, 1))
         out = torch.flatten(out, 1)
