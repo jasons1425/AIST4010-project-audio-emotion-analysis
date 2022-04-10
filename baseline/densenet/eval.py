@@ -24,15 +24,15 @@ FC = [2048]
 DROPOUT = 0.5
 device = "cuda" if torch.cuda.is_available() else "cpu"
 val_model = DenseNetSpecModel(densenet121, 1024, 1, fcs=FC, dropout=DROPOUT).half().to(device)
-val_model.load_state_dict(torch.load(r"../results/valence/models/densenet_valence0271.pth"))
+val_model.load_state_dict(torch.load(r"../results/valence/models/densenet_valence0431.pth"))
 val_model.eval()
 
 aro_model = DenseNetSpecModel(densenet121, 1024, 1, fcs=FC, dropout=DROPOUT).half().to(device)
-aro_model.load_state_dict(torch.load(r"../results/arousal/models/densenet_arousal0166.pth"))
+aro_model.load_state_dict(torch.load(r"../results/arousal/models/densenet_arousal0253.pth"))
 aro_model.eval()
 
 dom_model = DenseNetSpecModel(densenet121, 1024, 1, fcs=FC, dropout=DROPOUT).half().to(device)
-dom_model.load_state_dict(torch.load(r"../results/dominance/models/densenet_dominance0178.pth"))
+dom_model.load_state_dict(torch.load(r"../results/dominance/models/densenet_dominance0234.pth"))
 dom_model.eval()
 
 

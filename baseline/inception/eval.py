@@ -24,15 +24,15 @@ FC = [2048]
 DROPOUT = 0.5
 device = "cuda" if torch.cuda.is_available() else "cpu"
 val_model = InceptionSpecModel(inception_v3, 1, fcs=FC, dropout=DROPOUT).half().to(device)
-val_model.load_state_dict(torch.load(r"../results/valence/models/inception_valence0354.pth"))
+val_model.load_state_dict(torch.load(r"../results/valence/models/inception_valence0405.pth"))
 val_model.eval()
 
 aro_model = InceptionSpecModel(inception_v3, 1, fcs=FC, dropout=DROPOUT).half().to(device)
-aro_model.load_state_dict(torch.load(r"../results/arousal/models/inception_arousal0175.pth"))
+aro_model.load_state_dict(torch.load(r"../results/arousal/models/inception_arousal0481.pth"))
 aro_model.eval()
 
 dom_model = InceptionSpecModel(inception_v3, 1, fcs=FC, dropout=DROPOUT).half().to(device)
-dom_model.load_state_dict(torch.load(r"../results/dominance/models/inception_dominance0206.pth"))
+dom_model.load_state_dict(torch.load(r"../results/dominance/models/inception_dominance0499.pth"))
 dom_model.eval()
 
 

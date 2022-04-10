@@ -24,15 +24,15 @@ FC = [2048]
 DROPOUT = 0.5
 device = "cuda" if torch.cuda.is_available() else "cpu"
 val_model = EfficientNetSpecModel(efficientnet_b2, 1408, 1, fcs=FC, dropout=DROPOUT).half().to(device)
-val_model.load_state_dict(torch.load(r"../results/valence/models/efficientnet_valence0488.pth"))
+val_model.load_state_dict(torch.load(r"../results/valence/models/efficientnet_valence0395.pth"))
 val_model.eval()
 
 aro_model = EfficientNetSpecModel(efficientnet_b2, 1408, 1, fcs=FC, dropout=DROPOUT).half().to(device)
-aro_model.load_state_dict(torch.load(r"../results/arousal/models/efficientnet_arousal0353.pth"))
+aro_model.load_state_dict(torch.load(r"../results/arousal/models/efficientnet_arousal0245.pth"))
 aro_model.eval()
 
 dom_model = EfficientNetSpecModel(efficientnet_b2, 1408, 1, fcs=FC, dropout=DROPOUT).half().to(device)
-dom_model.load_state_dict(torch.load(r"../results/dominance/models/efficientnet_dominance0343.pth"))
+dom_model.load_state_dict(torch.load(r"../results/dominance/models/efficientnet_dominance0303.pth"))
 dom_model.eval()
 
 

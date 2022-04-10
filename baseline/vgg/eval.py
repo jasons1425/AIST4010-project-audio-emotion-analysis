@@ -1,6 +1,6 @@
 from data.load import load_imgs_png, get_loader, get_labels
 from data.preprocess import spectrum_transform
-from models.VGG import VGGSpecModel
+from baseline.vgg.vgg import VGGSpecModel
 from audtorch.metrics.functional import pearsonr
 from torchvision.models import vgg16
 import torch.nn as nn
@@ -24,15 +24,15 @@ FC = [2048]
 DROPOUT, CLS_BASE = 0.5, -1
 device = "cuda" if torch.cuda.is_available() else "cpu"
 val_model = VGGSpecModel(vgg16, 4096, 1, fcs=FC, dropout=DROPOUT, classifier_base=CLS_BASE).half().to(device)
-val_model.load_state_dict(torch.load(r"../results/valence/models/vgg16baseline_valence0309.pth"))
+val_model.load_state_dict(torch.load(r"../results/valence/models/vgg16baseline_valence0379.pth"))
 val_model.eval()
 
 aro_model = VGGSpecModel(vgg16, 4096, 1, fcs=FC, dropout=DROPOUT, classifier_base=CLS_BASE).half().to(device)
-aro_model.load_state_dict(torch.load(r"../results/arousal/models/vgg16baseline_arousal0206.pth"))
+aro_model.load_state_dict(torch.load(r"../results/arousal/models/vgg16baseline_arousal0190.pth"))
 aro_model.eval()
 
 dom_model = VGGSpecModel(vgg16, 4096, 1, fcs=FC, dropout=DROPOUT, classifier_base=CLS_BASE).half().to(device)
-dom_model.load_state_dict(torch.load(r"../results/dominance/models/vgg16baseline_dominance0200.pth"))
+dom_model.load_state_dict(torch.load(r"../results/dominance/models/vgg16baseline_dominance0253.pth"))
 dom_model.eval()
 
 

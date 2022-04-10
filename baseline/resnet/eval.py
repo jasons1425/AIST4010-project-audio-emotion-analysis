@@ -24,15 +24,15 @@ FC = [2048]
 DROPOUT = 0.5
 device = "cuda" if torch.cuda.is_available() else "cpu"
 val_model = ResNetSpecModel(resnet34, 512, 1, fcs=FC, dropout=DROPOUT).half().to(device)
-val_model.load_state_dict(torch.load(r"../results/valence/models/resnet_valence0308.pth"))
+val_model.load_state_dict(torch.load(r"../results/valence/models/resnet_valence0409.pth"))
 val_model.eval()
 
 aro_model = ResNetSpecModel(resnet34, 512, 1, fcs=FC, dropout=DROPOUT).half().to(device)
-aro_model.load_state_dict(torch.load(r"../results/arousal/models/resnet_arousal0185.pth"))
+aro_model.load_state_dict(torch.load(r"../results/arousal/models/resnet_arousal0220.pth"))
 aro_model.eval()
 
 dom_model = ResNetSpecModel(resnet34, 512, 1, fcs=FC, dropout=DROPOUT).half().to(device)
-dom_model.load_state_dict(torch.load(r"../results/dominance/models/resnet_dominance0175.pth"))
+dom_model.load_state_dict(torch.load(r"../results/dominance/models/resnet_dominance0213.pth"))
 dom_model.eval()
 
 
