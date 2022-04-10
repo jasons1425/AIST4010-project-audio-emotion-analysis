@@ -18,16 +18,14 @@ class InceptionSpecModel(nn.Module):
         super(InceptionSpecModel, self).__init__()
         inception = InceptionClassifier(inception_pretrained)
         self.inception = inception
+        fcs = [2048] + fcs + [out_dim]
         fc_layers = []
         for idx in range(1, len(fcs)):
+            if idx != 1:
+                fc_layers.append(nn.Dropout(dropout))
             fc_layers.append(nn.Linear(fcs[idx-1], fcs[idx]))
-            fc_layers.append(act())
-            fc_layers.append(nn.Dropout(dropout))
-        if fcs:
-            fc_layers.insert(0, nn.Linear(2048, fcs[0]))
-            fc_layers.append(nn.Linear(fcs[-1], out_dim))
-        else:
-            fc_layers.append(nn.Linear(2048, out_dim))
+            if act and idx != (len(fcs) - 1):
+                fc_layers.append(act())
         if init:
             for layer in fc_layers:
                 if type(layer) == nn.Linear:

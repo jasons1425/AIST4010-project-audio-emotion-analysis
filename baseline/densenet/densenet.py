@@ -25,16 +25,14 @@ class DenseNetSpecModel(nn.Module):
         densenet = DenseNetClassifier(densenet_pretrained)
         self.densenet = densenet
         self.embedding_dim = embedding_dim
+        fcs = [embedding_dim] + fcs + [out_dim]
         fc_layers = []
         for idx in range(1, len(fcs)):
+            if idx != 1:
+                fc_layers.append(nn.Dropout(dropout))
             fc_layers.append(nn.Linear(fcs[idx-1], fcs[idx]))
-            fc_layers.append(act())
-            fc_layers.append(nn.Dropout(dropout))
-        if fcs:
-            fc_layers.insert(0, nn.Linear(embedding_dim, fcs[0]))
-            fc_layers.append(nn.Linear(fcs[-1], out_dim))
-        else:
-            fc_layers.append(nn.Linear(embedding_dim, out_dim))
+            if act and idx != (len(fcs) - 1):
+                fc_layers.append(act())
         if init:
             for layer in fc_layers:
                 if type(layer) == nn.Linear:

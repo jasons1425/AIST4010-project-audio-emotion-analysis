@@ -42,7 +42,7 @@ optimizer = torch.optim.SGD(model.parameters(),
 
 
 # training
-EPOCHS = 30
+EPOCHS = 20
 best_model, losses = train_model(model, train_loader, criterion, optimizer, EPOCHS,
                                  device, valid_loader=valid_loader, half=True)
 with open("efficientnet_arousal_loss.npy", 'wb') as f:

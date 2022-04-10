@@ -1,9 +1,10 @@
 from data.load import load_imgs_png, get_loader, get_labels
 from data.preprocess import spectrum_transform
 from helper.process import train_model
-from models.VGG import VGGSpecModel
+from baseline.vgg.vgg import VGGSpecModel
 from torch.utils.data import random_split
 from torchvision.models import vgg16, vgg11, vgg19, vgg13, vgg11_bn, alexnet
+import matplotlib.pyplot as plt
 import torch.nn as nn
 import numpy as np
 import torch
@@ -53,7 +54,7 @@ optimizer = torch.optim.SGD(model.parameters(),
 
 
 # training
-EPOCHS = 30
+EPOCHS = 20
 best_model, losses = train_model(model, train_loader, criterion, optimizer, EPOCHS,
                                  device, valid_loader=valid_loader, half=True)
 with open("vgg16baseline_dominance_loss.npy", 'wb') as f:
