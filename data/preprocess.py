@@ -43,7 +43,7 @@ def spectrum_transform(resize=224, crop_size=None, norm=True, freq_mask=(0.5, 0.
     if crop_size:
         trans_stack.append(transforms.RandomCrop(crop_size))
     if resize:
-        trans_stack.append(transforms.Resize(resize))
+        trans_stack.append(transforms.Resize((resize, resize)))
     if freq_mask:
         trans_stack.append(FreqMasking(*freq_mask))
     if time_mask:
