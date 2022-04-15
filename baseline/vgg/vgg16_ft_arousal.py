@@ -14,9 +14,8 @@ import torch
 BATCH = 32
 TRAIN_SIZE, VAL_SIZE = 8500, 500
 data, ids = load_imgs_png()  # image channel is 3
-train_idxs, val_idxs = random_split(np.arange(TRAIN_SIZE + VAL_SIZE), [TRAIN_SIZE, VAL_SIZE])
-train_data, valid_data = data[train_idxs], data[val_idxs]
-train_ids, valid_ids = ids[train_idxs], ids[val_idxs]
+train_data, valid_data = data[:TRAIN_SIZE], data[TRAIN_SIZE:TRAIN_SIZE+VAL_SIZE]
+train_ids, valid_ids = ids[:TRAIN_SIZE], ids[TRAIN_SIZE:TRAIN_SIZE+VAL_SIZE]
 train_labels = get_labels(train_ids)[:, 1].reshape(-1, 1) / 9  # map the 9-point scale to 0-1 scale
 valid_labels = get_labels(valid_ids)[:, 1].reshape(-1, 1) / 9  # map the 9-point scale to 0-1 scale
 # if resize is None, the image dimension will be 217 * 334 (H * W)
