@@ -281,16 +281,16 @@ class LargeConvFEv11(nn.Module):
         # expect input dimension to be (128 * 128)
         self.layers = nn.Sequential(
             BnConv(in_dim + 1, 32, (13, 29), 1, 0),         # 32  * 116 * 100
-            nn.AvgPool2d(2),                                # 32  * 52  * 44
-            BnConv(32, 64, 5, 1, 2),                        # 128 * 52  * 44
-            BnConv(64, 64, 5, 1, 2),                        # 128 * 52  * 44
-            nn.AvgPool2d(2),                                # 128 * 26  * 22
-            BnConv(64, 256, 3, 1, 1),                       # 256 * 26  * 22
-            BnConv(256, 256, 3, 1, 1),                      # 256 * 26  * 22
-            nn.AvgPool2d(2),                                # 256 * 13  * 11
-            BnConv(256, 1024, 3, 1, 0),                     # 1024 * 11  * 9
-            BnConv(1024, 1024, 3, 1, 0),                    # 1024 * 9   * 7
-            nn.AdaptiveAvgPool2d((2, 2)),                   # 1024 * 2   * 2
+            nn.AvgPool2d(2),                                # 32  * 58  * 50
+            BnConv(32, 64, 5, 1, 2),                        # 64  * 58  * 50
+            BnConv(64, 64, 5, 1, 2),                        # 64  * 58  * 50
+            nn.AvgPool2d(2),                                # 64  * 29  * 25
+            BnConv(64, 256, 3, 1, 1),                       # 256 * 29  * 25
+            BnConv(256, 256, 3, 1, 1),                      # 256 * 29  * 25
+            nn.AvgPool2d(2),                                # 256 * 14  * 12
+            BnConv(256, 1024, 3, 1, 0),                     # 1024 * 12 * 10
+            BnConv(1024, 1024, 3, 1, 0),                    # 1024 * 10 * 8
+            nn.AdaptiveAvgPool2d((2, 2)),                   # 1024 * 2  * 2
             nn.Flatten(),                                   # 4096
         )
         self.pos_enc = positionalencoding1d(128, 128)
@@ -313,17 +313,17 @@ class LargeConvFEv12(nn.Module):
         super().__init__()
         # expect input dimension to be (128 * 128)
         self.layers = nn.Sequential(
-            BnConv(in_dim, 32, (13, 29), 1, 0),         # 32  * 116 * 100
-            nn.AvgPool2d(2),                                # 32  * 52  * 44
-            BnConv(32, 64, 5, 1, 2),                        # 128 * 52  * 44
-            BnConv(64, 64, 5, 1, 2),                        # 128 * 52  * 44
-            nn.AvgPool2d(2),                                # 128 * 26  * 22
-            BnConv(64, 256, 3, 1, 1),                       # 256 * 26  * 22
-            BnConv(256, 256, 3, 1, 1),                      # 256 * 26  * 22
-            nn.AvgPool2d(2),                                # 256 * 13  * 11
-            BnConv(256, 1024, 3, 1, 0),                     # 1024 * 11  * 9
-            BnConv(1024, 1024, 3, 1, 0),                    # 1024 * 9   * 7
-            nn.AdaptiveAvgPool2d((2, 2)),                   # 1024 * 2   * 2
+            BnConv(in_dim + 1, 32, (13, 29), 1, 0),         # 32  * 116 * 100
+            nn.AvgPool2d(2),                                # 32  * 58  * 50
+            BnConv(32, 64, 5, 1, 2),                        # 64  * 58  * 50
+            BnConv(64, 64, 5, 1, 2),                        # 64  * 58  * 50
+            nn.AvgPool2d(2),                                # 64  * 29  * 25
+            BnConv(64, 256, 3, 1, 1),                       # 256 * 29  * 25
+            BnConv(256, 256, 3, 1, 1),                      # 256 * 29  * 25
+            nn.AvgPool2d(2),                                # 256 * 14  * 12
+            BnConv(256, 1024, 3, 1, 0),                     # 1024 * 12 * 10
+            BnConv(1024, 1024, 3, 1, 0),                    # 1024 * 10 * 8
+            nn.AdaptiveAvgPool2d((2, 2)),                   # 1024 * 2  * 2
             nn.Flatten(),                                   # 4096
         )
 

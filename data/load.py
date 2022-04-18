@@ -15,6 +15,7 @@ DATA_DIR = r"D:\Documents\datasets\AIST4010\muse"
 PNG_DIR = os.path.join(DATA_DIR, "spectrograms")
 SPEC_DIR = os.path.join(DATA_DIR, "spectrograms_jpg")
 SONGS_DATA = os.path.join(DATA_DIR, "extracted_data.csv")
+WAV_DIR = os.path.join(DATA_DIR, "wavs")
 
 
 def load_imgs(fp=SPEC_DIR):
@@ -55,3 +56,11 @@ def get_loader(data, labels, batch_size, shuffle=True,
     ds = ds_class(data, labels, transform=transform)
     loader = DataLoader(ds, batch_size=batch_size, shuffle=shuffle, **kwargs)
     return loader
+
+
+def get_wav_fp(wav_dir=WAV_DIR, extension='.npy'):
+    npy_fps = glob.glob(os.path.join(wav_dir, '*'+extension))
+    re_pattern = r".*\\([^\\\.]*)\.npy"
+    npy_fps.sort(key=lambda fp: re.match(re_pattern, fp).group(1))
+    song_ids = [re.match(re_pattern, fp).group(1) for fp in npy_fps]
+    return npy_fps, np.array(song_ids)
