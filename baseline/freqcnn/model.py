@@ -313,7 +313,7 @@ class LargeConvFEv12(nn.Module):
         super().__init__()
         # expect input dimension to be (128 * 128)
         self.layers = nn.Sequential(
-            BnConv(in_dim + 1, 32, (13, 29), 1, 0),         # 32  * 116 * 100
+            BnConv(in_dim, 32, (13, 29), 1, 0),             # 32  * 116 * 100
             nn.AvgPool2d(2),                                # 32  * 58  * 50
             BnConv(32, 64, 5, 1, 2),                        # 64  * 58  * 50
             BnConv(64, 64, 5, 1, 2),                        # 64  * 58  * 50

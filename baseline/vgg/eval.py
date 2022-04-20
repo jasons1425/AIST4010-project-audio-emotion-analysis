@@ -67,3 +67,10 @@ dom_mae, dom_mse, dom_pcc = mae(preds_dom, labels_dom), mse(preds_dom, labels_do
 print(f"{val_mae.item():.5f}, {val_mse.item():.5f}, {val_pcc.item():.5f}")
 print(f"{aro_mae.item():.5f}, {aro_mse.item():.5f}, {aro_pcc.item():.5f}")
 print(f"{dom_mae.item():.5f}, {dom_mse.item():.5f}, {dom_pcc.item():.5f}")
+
+import matplotlib.pyplot as plt
+plt.scatter(labels_val.cpu(), labels_val.cpu(), label="true valence")
+plt.scatter(labels_val.cpu(), preds_val.cpu(), label="predictions")
+plt.legend()
+plt.show()
+
