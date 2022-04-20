@@ -9,7 +9,7 @@ import torch
 
 
 # data preparation
-BATCH = 32
+BATCH = 16
 TRAIN_SIZE, VAL_SIZE = 8500, 500
 data, ids = get_wav_fp()  # image channel is 3
 train_data, valid_data = data[:TRAIN_SIZE], data[TRAIN_SIZE:TRAIN_SIZE+VAL_SIZE]
@@ -17,8 +17,8 @@ train_ids, valid_ids = ids[:TRAIN_SIZE], ids[TRAIN_SIZE:TRAIN_SIZE+VAL_SIZE]
 train_labels = get_labels(train_ids)[:, 0].reshape(-1, 1) / 9  # map the 9-point scale to 0-1 scale
 valid_labels = get_labels(valid_ids)[:, 0].reshape(-1, 1) / 9  # map the 9-point scale to 0-1 scale
 train_ds, valid_ds = LazyWavDataset(train_data, train_labels), LazyWavDataset(valid_data, valid_labels)
-train_loader = DataLoader(train_ds, batch_size=16, shuffle=True)
-valid_loader = DataLoader(valid_ds, batch_size=16, shuffle=False)
+train_loader = DataLoader(train_ds, batch_size=BATCH, shuffle=True)
+valid_loader = DataLoader(valid_ds, batch_size=BATCH, shuffle=False)
 
 
 # model preparation
@@ -43,7 +43,16 @@ model = WaveNet(1, 2048, sr=sr, wsize=wsize, hsize=hsize, mel_bins=mel_bins,
 # lr=1e-3, batch=16, 30 epochs, 160 m 06 s, 0.0328, fcs=[2048], freeze = 7
 # lr=1e-3, batch=16, 30 epochs, 160 m 41 s, 0.0325, fcs=[2048], freeze = 8
 # lr=1e-3, batch=16, 30 epochs, 158 m 11 s, 0.0323, fcs=[2048], freeze = 9
-
+# lr=1e-3, batch=16, 30 epochs, 163 m 11 s, 0.0321, fcs=[2048], freeze = 10
+# lr=1e-3, batch=16, 30 epochs, 158 m 10 s, 0.0311, fcs=[2048], freeze = 1
+# lr=1e-3, batch=16, 30 epochs, 163 m 44 s, 0.0311, fcs=[2048], freeze = 2
+# lr=1e-3, batch=16, 30 epochs, 165 m 00 s, 0.0310, fcs=[2048], freeze = 3
+# lr=1e-3, batch=16, 30 epochs, 162 m 37 s, 0.0311, fcs=[2048], freeze = 4
+# lr=1e-3, batch=16, 30 epochs, 162 m 37 s, 0.0305, fcs=[2048], freeze = 5
+# lr=1e-3, batch=16, 30 epochs, 167 m 23 s, 0.0306, fcs=[2048], freeze = 6
+# lr=1e-3, batch=16, 30 epochs, 157 m 28 s, 0.0302, fcs=[2048], freeze = 7
+# lr=1e-3, batch=16, 30 epochs, 160 m 30 s, 0.0316, fcs=[2048], freeze = 8
+# lr=1e-3, batch=16, 30 epochs, 167 m 46 s, 0.0314, fcs=[2048], freeze = 9
 LR, MOMENTUM, DECAY = 1e-3, 0.9, 1e-3
 criterion = nn.MSELoss()
 # optimizer = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=DECAY)

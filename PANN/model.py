@@ -198,13 +198,15 @@ class WaveNet(nn.Module):
                  sr=22050, wsize=520, hsize=320,
                  mel_bins=128, fmin=50, fmax=8000,
                  fcs=[], dropout=0.2, act=nn.ReLU,
-                 init=nn.init.kaiming_normal_, freeze=0):
+                 init=nn.init.kaiming_normal_, freeze=0,
+                 checkpoint_fp=checkpoint_path):
         super().__init__()
         self.wavecnn = Wavegram_Cnn14(sample_rate=sr, window_size=wsize,
                                       hop_size=hsize, mel_bins=mel_bins,
                                       fmin=fmin, fmax=fmax, classes_num=527)
-        checkpoint = torch.load(r"Wavegram_Cnn14_mAP=0.389.pth")
-        self.wavecnn.load_state_dict(checkpoint['model'])
+        if checkpoint_fp:
+            checkpoint = torch.load(checkpoint_fp)
+            self.wavecnn.load_state_dict(checkpoint['model'])
         for param in self.wavecnn.fc_audioset.parameters():
             param.requires_grad = False
         if freeze:
