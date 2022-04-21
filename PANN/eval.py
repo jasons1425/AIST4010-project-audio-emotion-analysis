@@ -31,18 +31,20 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 freeze = 10
 val_model = WaveNet(1, 2048, sr=sr, wsize=wsize, hsize=hsize, mel_bins=mel_bins,
                     fmin=fmin, fmax=fmax, fcs=fcs, dropout=dropout, act=act, freeze=freeze).half().to(device)
-val_model_fp = r"results/valence/models/freeze_convBlock4_valmse=0314.pth"
+val_model_fp = r"results/valence/models/freeze_none_valmse=0307.pth"
 val_model.load_state_dict(torch.load(val_model_fp))
 val_model.eval()
 
 aro_model = WaveNet(1, 2048, sr=sr, wsize=wsize, hsize=hsize, mel_bins=mel_bins,
                     fmin=fmin, fmax=fmax, fcs=fcs, dropout=dropout, act=act, freeze=freeze).half().to(device)
-# aro_model.load_state_dict(torch.load(r"pann_valence0304.pth"))
+aro_model_fp = r"results/arousal/models/freeze_none_valmse=0150.pth"
+aro_model.load_state_dict(torch.load(aro_model_fp))
 aro_model.eval()
 
 dom_model = WaveNet(1, 2048, sr=sr, wsize=wsize, hsize=hsize, mel_bins=mel_bins,
                     fmin=fmin, fmax=fmax, fcs=fcs, dropout=dropout, act=act, freeze=freeze).half().to(device)
-# aro_model.load_state_dict(torch.load(r"pann_valence0304.pth"))
+dom_model_fp = r"results/dominance/models/freeze_none_valmse=0165.pth"
+dom_model.load_state_dict(torch.load(dom_model_fp))
 dom_model.eval()
 
 
@@ -58,8 +60,8 @@ with torch.no_grad():
         else:
             labels = y
         pred_val = val_model(x)
-        pred_aro = pred_val
-        pred_dom = pred_val
+        pred_aro = aro_model(x)
+        pred_dom = dom_model(x)
         batch_pred = torch.cat((pred_val, pred_aro, pred_dom), dim=1)
         if preds is not None:
             preds = torch.cat((preds, batch_pred), dim=0)
@@ -72,17 +74,17 @@ labels_dom, preds_dom = labels[:, 2], preds[:, 2]
 # print(preds_val.size(), labels_val.size())
 # exit(0)
 val_mae, val_mse, val_pcc = mae(preds_val, labels_val), mse(preds_val, labels_val), pcc(preds_val, labels_val)
-# aro_mae, aro_mse, aro_pcc = mae(preds_aro, labels_aro), mse(preds_aro, labels_aro), pcc(preds_aro, labels_aro)
-# dom_mae, dom_mse, dom_pcc = mae(preds_dom, labels_dom), mse(preds_dom, labels_dom), pcc(preds_dom, labels_dom)
+aro_mae, aro_mse, aro_pcc = mae(preds_aro, labels_aro), mse(preds_aro, labels_aro), pcc(preds_aro, labels_aro)
+dom_mae, dom_mse, dom_pcc = mae(preds_dom, labels_dom), mse(preds_dom, labels_dom), pcc(preds_dom, labels_dom)
 print(f"{val_mae.item():.5f}, {val_mse.item():.5f}, {val_pcc.item():.5f}")
-# print(f"{aro_mae.item():.5f}, {aro_mse.item():.5f}, {aro_pcc.item():.5f}")
-# print(f"{dom_mae.item():.5f}, {dom_mse.item():.5f}, {dom_pcc.item():.5f}")
+print(f"{aro_mae.item():.5f}, {aro_mse.item():.5f}, {aro_pcc.item():.5f}")
+print(f"{dom_mae.item():.5f}, {dom_mse.item():.5f}, {dom_pcc.item():.5f}")
 
 
 fig, ax = plt.subplots()
 ax.scatter(labels_val.cpu(), labels_val.cpu(), label="Ideal fit")
 ax.scatter(labels_val.cpu(), preds_val.cpu(), label="Predictions", color='y')
-ax.set_title("LargeConv - Valence Predictions against True Valence Level")
+ax.set_title("Valence Predictions against True Valence Level")
 ax.set_xlabel("Valence Levels")
 ax.set_ylabel("Predictions")
 ax.legend()
