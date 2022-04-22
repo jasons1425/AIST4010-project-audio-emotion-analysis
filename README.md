@@ -30,3 +30,7 @@ SID: 1155142198
   - `old_spec_approach\summary.txt`: Stores the results of some training results in the early stage
 
 - `inference.ipynb`: For the inference of the trained models.
+
+### Dataset
+- MuSe: The Musical Sentiment Dataset
+https://www.kaggle.com/datasets/cakiki/muse-the-musical-sentiment-dataset
